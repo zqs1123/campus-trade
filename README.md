@@ -1,7 +1,8 @@
 ```markdown
 # 校园二手交易平台（微服务版）
 
-> 基于 Spring Cloud Alibaba 的微服务实战项目，包含完整的服务注册发现、网关路由、JWT 鉴权、Feign 调用、Redis 缓存、RabbitMQ 延迟队列。
+> 基于 Spring Cloud Alibaba 的微服务实战项目，包含完整的服务注册发现、网关路由、JWT 鉴权、
+Feign 调用、Redis 缓存、RabbitMQ 延迟队列。
 
 ---
 
