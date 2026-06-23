@@ -26,32 +26,32 @@
 
 ```
 campus-trade/
-├── common/                     # 公共模块（工具类、统一返回体、全局异常）
-│   ├── entity/                 # Result、OrderStatus 枚举
-│   ├── exception/              # BusinessException、GlobalExceptionHandler
-│   └── utils/                  # JwtUtil、PasswordUtil
+├── common/                         # 公共模块（工具类、统一返回体、全局异常）
+│   ├── entity/                     # Result、OrderStatus 枚举
+│   ├── exception/                  # BusinessException、GlobalExceptionHandler
+│   └── utils/                      # JwtUtil、PasswordUtil
 │
-├── api/                        # Feign 接口契约（服务间通信定义）
-│   └── client/                 # ProductFeignClient、UserFeignClient
+├── api/                            # Feign 接口契约（服务间通信定义）
+│   └── client/                     # ProductFeignClient、UserFeignClient
 │
-├── gateway/                    # 网关服务（端口 9000）
-│   └── filter/                 # AuthGlobalFilter（JWT 全局鉴权）
+├── gateway/                        # 网关服务（端口 9000）
+│   └── filter/                     # AuthGlobalFilter（JWT 全局鉴权）
 │
-├── user-service/               # 用户服务（端口 9001）
-│   ├── controller/             # 注册、登录、查询
-│   ├── service/                # BCrypt 加密 + JWT 生成
-│   └── mapper/                 # UserMapper
+├── user-service/                   # 用户服务（端口 9001）
+│   ├── controller/                 # 注册、登录、查询
+│   ├── service/                    # BCrypt 加密 + JWT 生成
+│   └── mapper/                     # UserMapper
 │
-├── product-service/            # 商品服务（端口 9002）
-│   ├── controller/             # 发布、列表、详情、扣库存
-│   ├── service/                # Redis 缓存（@Cacheable / @CacheEvict）
-│   └── mapper/                 # ProductMapper、CategoryMapper
+├── product-service/                # 商品服务（端口 9002）
+│   ├── controller/                 # 发布、列表、详情、扣库存
+│   ├── service/                    # Redis 缓存（@Cacheable / @CacheEvict）
+│   └── mapper/                     # ProductMapper、CategoryMapper
 │
-└── order-service/              # 订单服务（端口 9003）
-├── controller/             # 创建、付款、发货、确认、取消
-├── service/                # 订单状态机 + Feign 调用扣库存
-├── config/                 # RabbitMQConfig（延迟队列）
-└── listener/               # OrderTimeoutListener（超时取消）
+└── order-service/                  # 订单服务（端口 9003）
+├── controller/                 # 创建、付款、发货、确认、取消
+├── service/                    # 订单状态机 + Feign 调用扣库存
+├── config/                     # RabbitMQConfig（延迟队列）
+└── listener/                   # OrderTimeoutListener（超时取消）
 ```
 
 ---
