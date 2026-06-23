@@ -24,14 +24,14 @@
 
 ## 🏗️ 模块结构
 
-```
+```text
 campus-trade/
-├── common/                         # 公共模块（工具类、统一返回体、全局异常）
+├── common/                         # 公共模块
 │   ├── entity/                     # Result、OrderStatus 枚举
 │   ├── exception/                  # BusinessException、GlobalExceptionHandler
 │   └── utils/                      # JwtUtil、PasswordUtil
 │
-├── api/                            # Feign 接口契约（服务间通信定义）
+├── api/                            # Feign 接口契约
 │   └── client/                     # ProductFeignClient、UserFeignClient
 │
 ├── gateway/                        # 网关服务（端口 9000）
@@ -44,15 +44,14 @@ campus-trade/
 │
 ├── product-service/                # 商品服务（端口 9002）
 │   ├── controller/                 # 发布、列表、详情、扣库存
-│   ├── service/                    # Redis 缓存（@Cacheable / @CacheEvict）
+│   ├── service/                    # Redis 缓存
 │   └── mapper/                     # ProductMapper、CategoryMapper
 │
 └── order-service/                  # 订单服务（端口 9003）
-├── controller/                 # 创建、付款、发货、确认、取消
-├── service/                    # 订单状态机 + Feign 调用扣库存
-├── config/                     # RabbitMQConfig（延迟队列）
-└── listener/                   # OrderTimeoutListener（超时取消）
-```
+    ├── controller/                 # 创建、付款、发货、确认、取消
+    ├── service/                    # 订单状态机 + Feign 调用扣库存
+    ├── config/                     # RabbitMQConfig（延迟队列）
+    └── listener/                   # OrderTimeoutListener（超时取消）
 
 ---
 
