@@ -12,7 +12,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - campus-trade-network
+      - campus-cloud-network
 
   redis:
     image: redis:latest
@@ -21,10 +21,36 @@ services:
     ports:
       - "6379:6379"
     networks:
-      - campus-trade-network
+      - campus-cloud-network
+
+  nacos:
+    image: nacos/nacos-server:v2.1.0
+    container_name: nacos
+    restart: always
+    environment:
+      MODE: standalone
+    ports:
+      - "8848:8848"
+      - "9848:9848"   # 新增 gRPC 端口
+    networks:
+      - campus-cloud-network
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - campus-cloud-network
 
 volumes:
   mysql_data:
 
 networks:
-  campus-trade-network:
+  campus-cloud-network:
+    driver: bridge
