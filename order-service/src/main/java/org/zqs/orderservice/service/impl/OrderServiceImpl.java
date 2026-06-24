@@ -151,13 +151,26 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void cancelOrderByTimeout(Integer orderId) {
         Order order = orderMapper.selectById(orderId);
-        if (order == null || order.getStatus() != OrderStatus.PENDING_PAYMENT.getCode()) {
+        if (order == null) {
             return;
         }
+        // 只有待付款状态才处理
+        if (order.getStatus() != OrderStatus.PENDING_PAYMENT.getCode()) {
+            return;
+        }
+
+        // ⭐ 先回滚库存（关键修复）
+        try {
+            productFeignClient.deductStock(order.getProductId(), -order.getQuantity());
+        } catch (Exception e) {
+            // 如果回滚失败，记录日志或发送告警，但订单状态仍需变更
+            System.err.println("库存回滚失败，订单ID：" + orderId + "，错误：" + e.getMessage());
+            // 这里可以加告警逻辑，但不阻断订单取消
+        }
+
+        // 再更新订单状态
         order.setStatus(OrderStatus.TIMEOUT.getCode());
         orderMapper.updateById(order);
-        // 回滚库存
-        productFeignClient.deductStock(order.getProductId(), -order.getQuantity());
     }
 
     @Override

@@ -1,6 +1,5 @@
-version: '3.8'
-
 services:
+  # ========== 中间件 ==========
   mysql:
     image: mysql:8.0
     container_name: mysql
@@ -31,7 +30,7 @@ services:
       MODE: standalone
     ports:
       - "8848:8848"
-      - "9848:9848"   # 新增 gRPC 端口
+      - "9848:9848"
     networks:
       - campus-cloud-network
 
@@ -45,6 +44,82 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - campus-cloud-network
+
+  # ========== 微服务 ==========
+  gateway:
+    build: ./gateway
+    container_name: gateway
+    ports:
+      - "9000:9000"
+    depends_on:
+      - nacos
+      - user-service
+      - product-service
+      - order-service
+    environment:
+      - SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR=nacos:8848
+    networks:
+      - campus-cloud-network
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    ports:
+      - "9001:9001"
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/campus_trade?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR=nacos:8848
+    networks:
+      - campus-cloud-network
+
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    ports:
+      - "9002:9002"
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/campus_trade?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR=nacos:8848
+    networks:
+      - campus-cloud-network
+
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    ports:
+      - "9003:9003"
+    depends_on:
+      - mysql
+      - redis
+      - nacos
+      - rabbitmq
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/campus_trade?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=123456
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_CLOUD_NACOS_DISCOVERY_SERVER_ADDR=nacos:8848
+      - SPRING_RABBITMQ_HOST=rabbitmq
+      - SPRING_RABBITMQ_PORT=5672
     networks:
       - campus-cloud-network
 
